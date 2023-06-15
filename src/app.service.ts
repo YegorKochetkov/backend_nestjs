@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getUsers() {
-    return [
-      { id: 1, name: 'Yegor' },
-      { id: 2, name: 'Polina' },
-    ];
+  getReadme(host: string) {
+    return `
+			<h1>Endpoints</h1>
+			<p>Get all users - <a href='http://${host}/api/users'>/api/users</a></p>
+		`;
   }
 }
