@@ -1,4 +1,4 @@
-import { Role } from 'src/roles/models/role.model';
+import { Role } from '../../roles/models/role.model';
 import { User } from './user.model';
 import {
   Column,
