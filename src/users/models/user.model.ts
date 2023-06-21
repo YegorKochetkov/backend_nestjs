@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from 'src/roles/models/role.model';
-import { UserRoles } from './user_roles.model';
+import { Role } from '../../roles/models/role.model';
+import { UserRoles } from './user-roles.model';
 import {
   BelongsToMany,
   Column,
