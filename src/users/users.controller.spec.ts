@@ -1,8 +1,12 @@
 import { getModelToken } from '@nestjs/sequelize';
 import { Test, TestingModule } from '@nestjs/testing';
+import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
+import { RolesService } from '../roles/roles.service';
 import { User } from './models/user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+
+const moduleMocker = new ModuleMocker(global);
 
 const usersArray = [
   {
@@ -39,7 +43,25 @@ describe('UsersController', () => {
           },
         },
       ],
-    }).compile();
+    })
+      .useMocker((token) => {
+        const results = { role: 'test1', description: 'admin' };
+
+        if (token === RolesService) {
+          return { findOne: jest.fn().mockResolvedValue(results) };
+        }
+
+        if (typeof token === 'function') {
+          const mockMetadata = moduleMocker.getMetadata(
+            token,
+          ) as MockFunctionMetadata<any, any>;
+
+          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+
+          return new Mock();
+        }
+      })
+      .compile();
 
     controller = module.get<UsersController>(UsersController);
   });

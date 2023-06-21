@@ -1,7 +1,11 @@
 import { getModelToken } from '@nestjs/sequelize';
 import { Test, TestingModule } from '@nestjs/testing';
+import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
+import { RolesService } from '../roles/roles.service';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
+
+const moduleMocker = new ModuleMocker(global);
 
 const usersArray = [
   {
@@ -17,6 +21,7 @@ const usersArray = [
 const oneUser = {
   email: 'email',
   password: 'password',
+  $set: () => ({}),
 };
 
 describe('UserService', () => {
@@ -38,7 +43,28 @@ describe('UserService', () => {
           },
         },
       ],
-    }).compile();
+    })
+      .useMocker((token) => {
+        const results = { role: 'test1', description: 'admin' };
+
+        if (token === RolesService) {
+          return {
+            create: jest.fn().mockResolvedValue(results),
+            findOne: jest.fn().mockResolvedValue(results),
+          };
+        }
+
+        if (typeof token === 'function') {
+          const mockMetadata = moduleMocker.getMetadata(
+            token,
+          ) as MockFunctionMetadata<any, any>;
+
+          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+
+          return new Mock();
+        }
+      })
+      .compile();
 
     service = module.get<UsersService>(UsersService);
     // model = module.get<typeof User>(getModelToken(User));
