@@ -1,4 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { UserRolesEnum } from '../constants/constants';
+import { CreateRoleDto } from './dto/create-role.dto';
+import { Role } from './models/role.model';
+import { RolesService } from './roles.service';
 import {
   ApiBody,
   ApiOperation,
@@ -6,10 +10,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserRolesEnum } from '../constants/constants';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { Role } from './models/role.model';
-import { RolesService } from './roles.service';
 
 @ApiTags('roles')
 @Controller('roles')
@@ -30,5 +30,12 @@ export class RolesController {
   @Get('/:role')
   findOne(@Param('role') role: UserRolesEnum) {
     return this.roleService.findOne(role);
+  }
+
+  @ApiOperation({ summary: 'Get all roles info' })
+  @ApiResponse({ status: 200, type: [Role] })
+  @Get()
+  findAll() {
+    return this.roleService.findAll();
   }
 }

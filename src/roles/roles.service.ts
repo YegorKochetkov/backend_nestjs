@@ -15,4 +15,8 @@ export class RolesService {
   async findOne(role: UserRolesEnum) {
     return await this.roleRepository.findOne({ where: { role } });
   }
+
+  async findAll() {
+    return await this.roleRepository.findAll();
+  }
 }
