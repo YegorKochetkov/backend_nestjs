@@ -23,7 +23,6 @@ describe('RolesController', () => {
           const mockMetadata = moduleMocker.getMetadata(
             token,
           ) as MockFunctionMetadata<any, any>;
-
           const Mock = moduleMocker.generateFromMetadata(mockMetadata);
 
           return new Mock();

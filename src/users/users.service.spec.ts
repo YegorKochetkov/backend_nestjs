@@ -79,7 +79,18 @@ describe('UserService', () => {
         email: 'email',
         password: 'password',
       });
+      const findSpy = jest.spyOn(model, 'create');
 
+      expect(
+        service.create({
+          email: 'email',
+          password: 'password',
+        }),
+      );
+      expect(findSpy).toBeCalledWith({
+        email: 'email',
+        password: 'password',
+      });
       expect(user).toEqual(oneUser);
     });
   });
@@ -95,6 +106,7 @@ describe('UserService', () => {
   describe('findOne()', () => {
     it('should get a single user', () => {
       const findSpy = jest.spyOn(model, 'findOne');
+
       expect(service.findOne(1));
       expect(findSpy).toBeCalledWith({ where: { id: 1 } });
     });
@@ -106,6 +118,7 @@ describe('UserService', () => {
         destroy: jest.fn(),
       } as any);
       const deletedUser = await service.remove(2);
+
       expect(findSpy).toBeCalledWith({ where: { id: 2 } });
       expect(deletedUser).toBeUndefined();
     });
