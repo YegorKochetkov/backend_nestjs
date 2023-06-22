@@ -29,4 +29,13 @@ export class UsersService {
       include: { all: true },
     });
   }
+
+  async findOne(id: number) {
+    return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async remove(id: number) {
+    const user = await this.findOne(id);
+    await user.destroy();
+  }
 }

@@ -26,7 +26,7 @@ const oneUser = {
 
 describe('UserService', () => {
   let service: UsersService;
-  // let model: typeof User;
+  let model: typeof User;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,9 +37,8 @@ describe('UserService', () => {
           useValue: {
             findAll: jest.fn(() => usersArray),
             create: jest.fn(() => oneUser),
-            // findOne: jest.fn(),
-            // remove: jest.fn(),
-            // destroy: jest.fn(() => oneUser),
+            findOne: jest.fn(() => oneUser),
+            remove: jest.fn(),
           },
         },
       ],
@@ -67,7 +66,7 @@ describe('UserService', () => {
       .compile();
 
     service = module.get<UsersService>(UsersService);
-    // model = module.get<typeof User>(getModelToken(User));
+    model = module.get<typeof User>(getModelToken(User));
   });
 
   it('should be defined', () => {
@@ -93,22 +92,22 @@ describe('UserService', () => {
     });
   });
 
-  // describe('findOne()', () => {
-  //   it('should get a single user', () => {
-  //     const findSpy = jest.spyOn(model, 'findOne');
-  //     expect(service.findOne('1'));
-  //     expect(findSpy).toBeCalledWith({ where: { id: '1' } });
-  //   });
-  // });
+  describe('findOne()', () => {
+    it('should get a single user', () => {
+      const findSpy = jest.spyOn(model, 'findOne');
+      expect(service.findOne(1));
+      expect(findSpy).toBeCalledWith({ where: { id: 1 } });
+    });
+  });
 
-  // describe('remove()', () => {
-  //   it('should remove a user', async () => {
-  //     const findSpy = jest.spyOn(model, 'findOne').mockReturnValue({
-  //       destroy: jest.fn(),
-  //     } as any);
-  //     const retVal = await service.remove('2');
-  //     expect(findSpy).toBeCalledWith({ where: { id: '2' } });
-  //     expect(retVal).toBeUndefined();
-  //   });
-  // });
+  describe('remove()', () => {
+    it('should remove a user', async () => {
+      const findSpy = jest.spyOn(model, 'findOne').mockReturnValue({
+        destroy: jest.fn(),
+      } as any);
+      const deletedUser = await service.remove(2);
+      expect(findSpy).toBeCalledWith({ where: { id: 2 } });
+      expect(deletedUser).toBeUndefined();
+    });
+  });
 });
