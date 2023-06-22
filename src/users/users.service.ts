@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Roles } from '../constants/constants';
+import { UserRolesEnum } from '../constants/constants';
 import { RolesService } from '../roles/roles.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './models/user.model';
@@ -17,7 +17,7 @@ export class UsersService {
       email: createUserDto.email,
       password: createUserDto.password,
     });
-    const role = await this.roleService.findOne(Roles.user);
+    const role = await this.roleService.findOne(UserRolesEnum.user);
 
     await user.$set('roles', [role.id]);
 

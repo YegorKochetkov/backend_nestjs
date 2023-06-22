@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRolesEnum } from '../../constants/constants';
 import { UserRoles } from '../../users/models/user-roles.model';
 import { User } from '../../users/models/user.model';
 import {
@@ -10,7 +11,7 @@ import {
 } from 'sequelize-typescript';
 
 interface RoleCreationAttrs {
-  role: string;
+  role: UserRolesEnum;
   description: string;
 }
 
@@ -25,15 +26,22 @@ export class Role extends Model<Role, RoleCreationAttrs> {
   })
   id: number;
 
-  @ApiProperty({ example: 'ADMIN', description: 'Unique value of the role' })
+  @ApiProperty({
+    example: 'admin',
+    description: 'Unique value of the role',
+    enum: Object.values(UserRolesEnum),
+  })
   @Column({
     type: DataType.STRING,
     unique: true,
     allowNull: false,
   })
-  role: string;
+  role: UserRolesEnum;
 
-  @ApiProperty({ example: 'Admin', description: 'Description of the role' })
+  @ApiProperty({
+    example: 'admin rules',
+    description: 'Description of the role',
+  })
   @Column({
     type: DataType.STRING,
     allowNull: false,

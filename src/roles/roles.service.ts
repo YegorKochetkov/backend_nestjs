@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { UserRolesEnum } from '../constants/constants';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Role } from './models/role.model';
 
@@ -11,7 +12,7 @@ export class RolesService {
     return await this.roleRepository.create(createRoleDto);
   }
 
-  async findOne(role: string) {
+  async findOne(role: UserRolesEnum) {
     return await this.roleRepository.findOne({ where: { role } });
   }
 }
