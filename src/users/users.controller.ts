@@ -35,6 +35,7 @@ export class UsersController {
   @ApiParam({ name: 'userId' })
   @Get('/:userId')
   findOne(@Param('userId') id: number) {
+    // TODO: ADD ERROR HANDLER
     return this.usersService.findOne(id);
   }
 

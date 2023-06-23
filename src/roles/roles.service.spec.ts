@@ -20,6 +20,7 @@ describe('RolesService', () => {
           useValue: {
             findOne: jest.fn(() => oneRole),
             create: jest.fn(() => oneRole),
+            findAll: jest.fn(() => [oneRole]),
           },
         },
       ],

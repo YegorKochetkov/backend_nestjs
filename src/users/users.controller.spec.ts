@@ -37,7 +37,7 @@ describe('UsersController', () => {
           useValue: {
             findAll: jest.fn(() => usersArray),
             create: jest.fn(() => oneUser),
-            findOne: jest.fn(),
+            findOne: jest.fn(() => oneUser),
             remove: jest.fn(),
           },
         },
