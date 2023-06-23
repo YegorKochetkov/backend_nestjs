@@ -53,12 +53,12 @@ export class AuthService {
 
   private async validateUser(userDto: CreateUserDto) {
     const user = await this.userService.findOneByEmail(userDto.email);
-    const isPasswordEquals = await bcrypt.compare(
+    const isPasswordsEqual = await bcrypt.compare(
       userDto.password,
       user.password,
     );
 
-    if (user && isPasswordEquals) {
+    if (user && isPasswordsEqual) {
       return user;
     }
 
