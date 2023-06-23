@@ -20,6 +20,7 @@ export class UsersService {
     const role = await this.roleService.findOne(UserRolesEnum.user);
 
     await user.$set('roles', [role.id]);
+    user.roles = [role];
 
     return user;
   }
@@ -32,6 +33,13 @@ export class UsersService {
 
   async findOne(id: number) {
     return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async findOneByEmail(email: string) {
+    return await this.userRepository.findOne({
+      where: { email },
+      include: { all: true },
+    });
   }
 
   async remove(id: number) {
