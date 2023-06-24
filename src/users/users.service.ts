@@ -10,7 +10,11 @@ export class UsersService {
   constructor(
     @InjectModel(User) private userRepository: typeof User,
     private roleService: RolesService,
-  ) {}
+  ) {
+    this.userRepository.addScope('withoutPassword', {
+      attributes: { exclude: ['password'] },
+    });
+  }
 
   async create(createUserDto: CreateUserDto) {
     const user = await this.userRepository.create({
@@ -25,8 +29,8 @@ export class UsersService {
     return user;
   }
 
-  async findAll() {
-    return await this.userRepository.findAll({
+  async findAll(scope = 'defaultScope') {
+    return await this.userRepository.scope(scope).findAll({
       include: { all: true },
     });
   }
