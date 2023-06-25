@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 import {
-  ApiBody,
+  ApiExcludeEndpoint,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -15,9 +15,7 @@ import {
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'Create new user' })
-  @ApiResponse({ status: 201, type: User })
-  @ApiBody({ type: CreateUserDto })
+  @ApiExcludeEndpoint(true)
   @Post()
   create(@Body() userDto: CreateUserDto) {
     return this.usersService.create(userDto);
@@ -27,7 +25,7 @@ export class UsersController {
   @ApiResponse({ status: 200, type: [User] })
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.usersService.findAll('withoutPassword');
   }
 
   @ApiOperation({ summary: 'Get user' })
@@ -36,7 +34,7 @@ export class UsersController {
   @Get('/:userId')
   findOne(@Param('userId') id: number) {
     // TODO: ADD ERROR HANDLER
-    return this.usersService.findOne(id);
+    return this.usersService.findOne(id, 'withoutPassword');
   }
 
   @ApiOperation({ summary: 'Delete user' })
@@ -44,6 +42,6 @@ export class UsersController {
   @ApiParam({ name: 'userId' })
   @Delete('/:userId')
   remove(@Param('userId') id: number) {
-    return this.usersService.remove(id);
+    return this.usersService.remove(id, 'withoutPassword');
   }
 }

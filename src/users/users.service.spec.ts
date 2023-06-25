@@ -39,12 +39,23 @@ describe('UserService', () => {
             create: jest.fn(() => oneUser),
             findOne: jest.fn(() => oneUser),
             remove: jest.fn(),
+            addScope: jest.fn(),
+            scope: jest.fn(() => model),
           },
         },
       ],
     })
       .useMocker((token) => {
         const results = { role: 'test1', description: 'admin' };
+
+        if (token === UsersService) {
+          return {
+            create: jest.fn().mockResolvedValue(oneUser),
+            findOne: jest.fn().mockResolvedValue(oneUser),
+            addScope: jest.fn(),
+            scope: jest.fn().mockResolvedValue(UsersService),
+          };
+        }
 
         if (token === RolesService) {
           return {
@@ -67,6 +78,9 @@ describe('UserService', () => {
 
     service = module.get<UsersService>(UsersService);
     model = module.get<typeof User>(getModelToken(User));
+    model.addScope('withoutPassword', {
+      attributes: { exclude: ['password'] },
+    });
   });
 
   it('should be defined', () => {

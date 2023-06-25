@@ -39,6 +39,7 @@ describe('UsersController', () => {
             create: jest.fn(() => oneUser),
             findOne: jest.fn(() => oneUser),
             remove: jest.fn(),
+            addScope: jest.fn(),
           },
         },
       ],

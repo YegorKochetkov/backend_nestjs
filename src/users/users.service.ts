@@ -35,19 +35,19 @@ export class UsersService {
     });
   }
 
-  async findOne(id: number) {
-    return await this.userRepository.findOne({ where: { id } });
+  async findOne(id: number, scope = 'defaultScope') {
+    return await this.userRepository.scope(scope).findOne({ where: { id } });
   }
 
-  async findOneByEmail(email: string) {
-    return await this.userRepository.findOne({
+  async findOneByEmail(email: string, scope = 'defaultScope') {
+    return await this.userRepository.scope(scope).findOne({
       where: { email },
       include: { all: true },
     });
   }
 
-  async remove(id: number) {
-    const user = await this.findOne(id);
+  async remove(id: number, scope = 'defaultScope') {
+    const user = await this.findOne(id, scope);
     await user.destroy();
   }
 }
