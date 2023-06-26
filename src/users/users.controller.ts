@@ -29,6 +29,6 @@ export class UsersController {
   @ApiParam({ name: 'userId' })
   @Delete('/:userId')
   remove(@Param('userId') id: number) {
-    return this.usersService.remove(id, 'withoutPassword');
+    return this.usersService.remove(id);
   }
 }
