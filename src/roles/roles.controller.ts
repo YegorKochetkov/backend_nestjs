@@ -1,21 +1,25 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserRolesEnum } from '../constants/constants';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Role } from './models/role.model';
 import { RolesService } from './roles.service';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('roles')
 @Controller('roles')
 export class RolesController {
   constructor(private roleService: RolesService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create new role' })
   @ApiResponse({ status: 201, type: Role })
   @ApiBody({ type: CreateRoleDto })

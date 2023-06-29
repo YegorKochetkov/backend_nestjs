@@ -32,10 +32,10 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete user (authorize required)' })
   @ApiResponse({ status: 200 })
   @ApiParam({ name: 'userId' })
-  @ApiBearerAuth()
   @Delete('/:userId')
   remove(@Param('userId') id: number) {
     return this.usersService.remove(id);
