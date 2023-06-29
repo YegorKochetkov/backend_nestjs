@@ -20,7 +20,7 @@ export class RolesController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create new role' })
+  @ApiOperation({ summary: 'Create new role (authorize required)' })
   @ApiResponse({ status: 201, type: Role })
   @ApiBody({ type: CreateRoleDto })
   @Post()
