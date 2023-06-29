@@ -10,6 +10,7 @@ const start = async () => {
     .setTitle('Users backend example')
     .setDescription('<h3>REST API documentation</h3>')
     .setVersion('1.0.0')
+    .addBearerAuth()
     .build();
 
   app.setGlobalPrefix('api/v1');

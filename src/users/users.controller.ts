@@ -1,7 +1,14 @@
-import { Controller, Delete, Get, Param } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('users')
 @Controller('users')
@@ -24,9 +31,11 @@ export class UsersController {
     return this.usersService.findOne(id, 'withoutPassword');
   }
 
-  @ApiOperation({ summary: 'Delete user' })
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Delete user (authorize required)' })
   @ApiResponse({ status: 200 })
   @ApiParam({ name: 'userId' })
+  @ApiBearerAuth()
   @Delete('/:userId')
   remove(@Param('userId') id: number) {
     return this.usersService.remove(id);
