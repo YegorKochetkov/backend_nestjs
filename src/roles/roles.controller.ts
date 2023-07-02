@@ -11,16 +11,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/decorators/roles-auth.decorator';
 
 @ApiTags('roles')
 @Controller('roles')
 export class RolesController {
   constructor(private roleService: RolesService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles('admin')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create new role (authorize required)' })
+  @ApiOperation({ summary: 'Create new role (admin privileges are required)' })
   @ApiResponse({ status: 201, type: Role })
   @ApiBody({ type: CreateRoleDto })
   @Post()
