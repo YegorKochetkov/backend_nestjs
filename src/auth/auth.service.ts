@@ -9,6 +9,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { TokenPayload } from '../constants/constants';
 
 @Injectable()
 export class AuthService {
@@ -44,7 +45,11 @@ export class AuthService {
   }
 
   private generateToken(user: User) {
-    const payload = { email: user.email, id: user.id, roles: user.roles };
+    const payload: TokenPayload = {
+      email: user.email,
+      id: user.id,
+      roles: user.roles,
+    };
 
     return {
       token: this.jwtService.sign(payload),
