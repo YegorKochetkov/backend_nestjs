@@ -2,6 +2,7 @@ import { Roles } from '../auth/decorators/roles-auth.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { UserRolesEnum } from '../constants/constants';
+import { SetBanDto } from './dto/set-ban.dto';
 import { SetRoleDto } from './dto/set-role.dto';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
@@ -61,7 +62,18 @@ export class UsersController {
   @ApiResponse({ status: 200 })
   @ApiBody({ type: SetRoleDto })
   @Post('/role')
-  setRole(@Body() addRoleDto: SetRoleDto) {
-    return this.usersService.setRole(addRoleDto);
+  setRole(@Body() setRoleDto: SetRoleDto) {
+    return this.usersService.setRole(setRoleDto);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(UserRolesEnum.admin)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Ban a user (admin privileges are required)' })
+  @ApiResponse({ status: 200 })
+  @ApiBody({ type: SetBanDto })
+  @Post('/ban')
+  setBan(@Body() setBanDto: SetBanDto) {
+    return this.usersService.setBan(setBanDto);
   }
 }
