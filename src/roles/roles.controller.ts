@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Roles } from '../auth/decorators/roles-auth.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 import { UserRolesEnum } from '../constants/constants';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Role } from './models/role.model';
@@ -11,8 +13,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/decorators/roles-auth.decorator';
 
 @ApiTags('roles')
 @Controller('roles')
@@ -20,7 +20,7 @@ export class RolesController {
   constructor(private roleService: RolesService) {}
 
   @UseGuards(RolesGuard)
-  @Roles('admin')
+  @Roles(UserRolesEnum.admin)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create new role (admin privileges are required)' })
   @ApiResponse({ status: 201, type: Role })
