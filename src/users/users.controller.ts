@@ -1,9 +1,22 @@
-import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
+import { Roles } from '../auth/decorators/roles-auth.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { UserRolesEnum } from '../constants/constants';
+import { SetRoleDto } from './dto/set-role.dto';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -39,5 +52,16 @@ export class UsersController {
   @Delete('/:userId')
   remove(@Param('userId') id: number) {
     return this.usersService.remove(id);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(UserRolesEnum.admin)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Set user`s role (admin privileges are required)' })
+  @ApiResponse({ status: 200 })
+  @ApiBody({ type: SetRoleDto })
+  @Post('/role')
+  setRole(@Body() addRoleDto: SetRoleDto) {
+    return this.usersService.setRole(addRoleDto);
   }
 }
