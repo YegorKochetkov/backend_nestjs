@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserRolesEnum } from '../constants/constants';
 import { RolesService } from '../roles/roles.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { SetBanDto } from './dto/set-ban.dto';
+import { SetRoleDto } from './dto/set-role.dto';
 import { User } from './models/user.model';
 
 @Injectable()
@@ -49,5 +51,20 @@ export class UsersService {
   async remove(id: number, scope = 'defaultScope') {
     const user = await this.findOne(id, scope);
     await user.destroy();
+  }
+
+  async setRole(setRoleDto: SetRoleDto, scope = 'defaultScope') {
+    const user = await this.findOne(setRoleDto.userId, scope);
+    const role = await this.roleService.findOne(setRoleDto.role);
+
+    if (user && role) {
+      await user.$add('role', role.id);
+    }
+
+    throw new HttpException('User or role not found', HttpStatus.NOT_FOUND);
+  }
+
+  async setBan(setBanDto: SetBanDto, scope = 'defaultScope') {
+    return;
   }
 }

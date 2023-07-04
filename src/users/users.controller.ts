@@ -41,7 +41,6 @@ export class UsersController {
   @ApiParam({ name: 'userId' })
   @Get('/:userId')
   findOne(@Param('userId') id: number) {
-    // TODO: ADD ERROR HANDLER
     return this.usersService.findOne(id, 'withoutPassword');
   }
 
@@ -58,7 +57,9 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Roles(UserRolesEnum.admin)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Set user`s role (admin privileges are required)' })
+  @ApiOperation({
+    summary: 'Set role for user (admin privileges are required)',
+  })
   @ApiResponse({ status: 200 })
   @ApiBody({ type: SetRoleDto })
   @Post('/role')
