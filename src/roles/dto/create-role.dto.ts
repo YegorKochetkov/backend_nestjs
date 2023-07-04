@@ -2,7 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserRolesEnum } from '../../constants/constants';
 
 export class CreateRoleDto {
-  @ApiProperty({ example: 'admin', description: 'Unique value of the role' })
+  @ApiProperty({
+    example: 'admin',
+    description: 'Unique value of the role',
+    enum: UserRolesEnum,
+  })
   readonly role: UserRolesEnum;
 
   @ApiProperty({
