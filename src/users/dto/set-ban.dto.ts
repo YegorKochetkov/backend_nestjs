@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SetBanDto {
-  @ApiProperty({ example: 'moderator', description: 'User`s new role' })
+  @ApiProperty({ example: 'scam', description: 'Reason to ban user' })
   readonly banReason: string;
 
   @ApiProperty({ example: '12', description: 'User`s id' })
