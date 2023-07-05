@@ -1,28 +1,40 @@
 import { getModelToken } from '@nestjs/sequelize';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
+import { UserRolesEnum } from '../constants/constants';
 import { RolesService } from '../roles/roles.service';
+import { SetRoleDto } from './dto/set-role.dto';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 
 const moduleMocker = new ModuleMocker(global);
 
-const usersArray = [
+const mockUsers = [
   {
+    id: 1,
     email: 'email',
     password: 'password',
+    $add: jest.fn(),
+    $set: jest.fn(),
   },
   {
-    email: 'email2',
-    password: 'password2',
+    id: 2,
+    email: 'email',
+    password: 'password',
+    $add: jest.fn(),
+    $set: jest.fn(),
   },
 ];
 
-const oneUser = {
+const mockUser = {
+  id: 2,
   email: 'email',
   password: 'password',
-  $set: () => ({}),
+  $add: jest.fn(),
+  $set: jest.fn(),
 };
+
+const mockRole = { id: 1, role: 'admin', description: 'admin' };
 
 describe('UserService', () => {
   let service: UsersService;
@@ -35,10 +47,12 @@ describe('UserService', () => {
         {
           provide: getModelToken(User),
           useValue: {
-            findAll: jest.fn(() => usersArray),
-            create: jest.fn(() => oneUser),
-            findOne: jest.fn(() => oneUser),
+            findAll: jest.fn(() => mockUsers),
+            create: jest.fn(() => mockUser),
+            findOne: jest.fn(() => mockUser),
+            findByPk: jest.fn(() => mockUser),
             remove: jest.fn(),
+            destroy: jest.fn(),
             addScope: jest.fn(),
             scope: jest.fn(() => model),
           },
@@ -46,21 +60,10 @@ describe('UserService', () => {
       ],
     })
       .useMocker((token) => {
-        const results = { role: 'test1', description: 'admin' };
-
-        if (token === UsersService) {
-          return {
-            create: jest.fn().mockResolvedValue(oneUser),
-            findOne: jest.fn().mockResolvedValue(oneUser),
-            addScope: jest.fn(),
-            scope: jest.fn().mockResolvedValue(UsersService),
-          };
-        }
-
         if (token === RolesService) {
           return {
-            create: jest.fn().mockResolvedValue(results),
-            findOne: jest.fn().mockResolvedValue(results),
+            create: jest.fn().mockResolvedValue(mockRole),
+            findOne: jest.fn().mockResolvedValue(mockRole),
           };
         }
 
@@ -93,19 +96,13 @@ describe('UserService', () => {
         email: 'email',
         password: 'password',
       });
-      const findSpy = jest.spyOn(model, 'create');
+      const createSpy = jest.spyOn(model, 'create');
 
-      expect(
-        service.create({
-          email: 'email',
-          password: 'password',
-        }),
-      );
-      expect(findSpy).toBeCalledWith({
+      expect(createSpy).toBeCalledWith({
         email: 'email',
         password: 'password',
       });
-      expect(user).toEqual(oneUser);
+      expect(user).toEqual(mockUser);
     });
   });
 
@@ -113,28 +110,44 @@ describe('UserService', () => {
     it('should return an array of users', async () => {
       const users = await service.findAll();
 
-      expect(users).toEqual(usersArray);
+      expect(users).toEqual(mockUsers);
     });
   });
 
   describe('findOne()', () => {
-    it('should get a single user', () => {
-      const findSpy = jest.spyOn(model, 'findOne');
+    it('should get a single user', async () => {
+      const findSpy = jest.spyOn(model, 'findByPk');
 
-      expect(service.findOne(1));
-      expect(findSpy).toBeCalledWith({ where: { id: 1 } });
+      const user = await service.findOne(2);
+      expect(findSpy).toBeCalledWith(2);
+      expect(user.id).toBe(2);
     });
   });
 
   describe('remove()', () => {
     it('should remove a user', async () => {
-      const findSpy = jest.spyOn(model, 'findOne').mockReturnValue({
+      const findSpy = jest.spyOn(model, 'findByPk').mockReturnValue({
         destroy: jest.fn(),
       } as any);
       const deletedUser = await service.remove(2);
 
-      expect(findSpy).toBeCalledWith({ where: { id: 2 } });
+      expect(findSpy).toBeCalledWith(2);
       expect(deletedUser).toBeUndefined();
+    });
+  });
+
+  describe('setRole()', () => {
+    const mockSetRoleDto: SetRoleDto = {
+      role: UserRolesEnum.admin,
+      userId: 1,
+    };
+
+    it('should add role for a user', async () => {
+      const userSpy = jest.spyOn(model, 'findByPk');
+
+      await service.setRole(mockSetRoleDto);
+
+      expect(userSpy).toBeCalledWith(mockSetRoleDto.userId);
     });
   });
 });

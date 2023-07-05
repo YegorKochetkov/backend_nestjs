@@ -60,7 +60,7 @@ export class UsersController {
   @ApiOperation({
     summary: 'Set role for user (admin privileges are required)',
   })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 201 })
   @ApiBody({ type: SetRoleDto })
   @Post('/role')
   setRole(@Body() setRoleDto: SetRoleDto) {
@@ -71,10 +71,23 @@ export class UsersController {
   @Roles(UserRolesEnum.admin)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Ban a user (admin privileges are required)' })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 201 })
   @ApiBody({ type: SetBanDto })
   @Post('/ban')
   setBan(@Body() setBanDto: SetBanDto) {
     return this.usersService.setBan(setBanDto);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles(UserRolesEnum.admin)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Remove ban from a user (admin privileges are required)',
+  })
+  @ApiResponse({ status: 201 })
+  @ApiParam({ name: 'userId' })
+  @Post('/unban/:userId')
+  removeBan(@Param('userId') id: number) {
+    return this.usersService.removeBan(id);
   }
 }

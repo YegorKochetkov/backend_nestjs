@@ -55,16 +55,41 @@ export class UsersService {
 
   async setRole(setRoleDto: SetRoleDto, scope = 'defaultScope') {
     const user = await this.findOne(setRoleDto.userId, scope);
-    const role = await this.roleService.findOne(setRoleDto.role);
 
-    if (user && role) {
-      await user.$add('role', role.id);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    throw new HttpException('User or role not found', HttpStatus.NOT_FOUND);
+    const role = await this.roleService.findOne(setRoleDto.role);
+
+    if (!role) {
+      throw new HttpException('Role not found', HttpStatus.NOT_FOUND);
+    }
+
+    await user.$add('role', role.id);
   }
 
   async setBan(setBanDto: SetBanDto, scope = 'defaultScope') {
     const user = await this.findOne(setBanDto.userId, scope);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    user.banned = true;
+    user.banReason = setBanDto.banReason;
+    await user.save();
+  }
+
+  async removeBan(userId: number, scope = 'defaultScope') {
+    const user = await this.findOne(userId, scope);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    user.banned = false;
+    user.banReason = null;
+    await user.save();
   }
 }
