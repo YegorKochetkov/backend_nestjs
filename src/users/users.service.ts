@@ -38,7 +38,7 @@ export class UsersService {
   }
 
   async findOne(id: number, scope = 'defaultScope') {
-    return await this.userRepository.scope(scope).findOne({ where: { id } });
+    return await this.userRepository.scope(scope).findByPk(id);
   }
 
   async findOneByEmail(email: string, scope = 'defaultScope') {
@@ -65,6 +65,6 @@ export class UsersService {
   }
 
   async setBan(setBanDto: SetBanDto, scope = 'defaultScope') {
-    return;
+    const user = await this.findOne(setBanDto.userId, scope);
   }
 }
