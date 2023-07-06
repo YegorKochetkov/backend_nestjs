@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 import { UserRolesEnum } from '../constants/constants';
 import { RolesService } from '../roles/roles.service';
+import { SetBanDto } from './dto/set-ban.dto';
 import { SetRoleDto } from './dto/set-role.dto';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
@@ -16,6 +17,7 @@ const mockUsers = [
     password: 'password',
     $add: jest.fn(),
     $set: jest.fn(),
+    save: jest.fn(),
   },
   {
     id: 2,
@@ -23,6 +25,7 @@ const mockUsers = [
     password: 'password',
     $add: jest.fn(),
     $set: jest.fn(),
+    save: jest.fn(),
   },
 ];
 
@@ -32,6 +35,7 @@ const mockUser = {
   password: 'password',
   $add: jest.fn(),
   $set: jest.fn(),
+  save: jest.fn(),
 };
 
 const mockRole = { id: 1, role: 'admin', description: 'admin' };
@@ -52,7 +56,6 @@ describe('UserService', () => {
             findOne: jest.fn(() => mockUser),
             findByPk: jest.fn(() => mockUser),
             remove: jest.fn(),
-            destroy: jest.fn(),
             addScope: jest.fn(),
             scope: jest.fn(() => model),
           },
@@ -148,6 +151,31 @@ describe('UserService', () => {
       await service.setRole(mockSetRoleDto);
 
       expect(userSpy).toBeCalledWith(mockSetRoleDto.userId);
+    });
+  });
+
+  describe('setBan()', () => {
+    const mockSetBanDto: SetBanDto = {
+      banReason: 'scam',
+      userId: 1,
+    };
+
+    it('should add role for a user', async () => {
+      const userSpy = jest.spyOn(model, 'findByPk');
+
+      await service.setBan(mockSetBanDto);
+
+      expect(userSpy).toBeCalledWith(mockSetBanDto.userId);
+    });
+  });
+
+  describe('removeBan()', () => {
+    it('should add role for a user', async () => {
+      const userSpy = jest.spyOn(model, 'findByPk');
+
+      await service.removeBan(1);
+
+      expect(userSpy).toBeCalledWith(1);
     });
   });
 });
