@@ -37,8 +37,16 @@ export class UsersService {
     });
   }
 
-  async findOne(id: number, scope = 'defaultScope') {
-    return await this.userRepository.scope(scope).findByPk(id);
+  async findOne(userId: number, scope = 'defaultScope') {
+    const user = await this.userRepository
+      .scope(scope)
+      .findByPk(userId, { include: { all: true } });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return user;
   }
 
   async findOneByEmail(email: string, scope = 'defaultScope') {
@@ -48,13 +56,20 @@ export class UsersService {
     });
   }
 
-  async remove(id: number, scope = 'defaultScope') {
-    const user = await this.findOne(id, scope);
+  async remove(userId: number, scope = 'defaultScope') {
+    const user = await this.userRepository.scope(scope).findByPk(userId);
+
+    if (!user) {
+      return;
+    }
+
     await user.destroy();
   }
 
   async setRole(setRoleDto: SetRoleDto, scope = 'defaultScope') {
-    const user = await this.findOne(setRoleDto.userId, scope);
+    const user = await this.userRepository
+      .scope(scope)
+      .findByPk(setRoleDto.userId);
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -70,7 +85,9 @@ export class UsersService {
   }
 
   async setBan(setBanDto: SetBanDto, scope = 'defaultScope') {
-    const user = await this.findOne(setBanDto.userId, scope);
+    const user = await this.userRepository
+      .scope(scope)
+      .findByPk(setBanDto.userId);
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -82,7 +99,7 @@ export class UsersService {
   }
 
   async removeBan(userId: number, scope = 'defaultScope') {
-    const user = await this.findOne(userId, scope);
+    const user = await this.userRepository.scope(scope).findByPk(userId);
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
