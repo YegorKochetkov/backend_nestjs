@@ -4,6 +4,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { UserRolesEnum } from '../constants/constants';
 import { SetBanDto } from './dto/set-ban.dto';
 import { SetRoleDto } from './dto/set-role.dto';
+import { UserIdParamDto } from './dto/user-id-param.dto';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 import {
@@ -38,27 +39,36 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get user' })
   @ApiResponse({ status: 200, type: User })
-  @ApiParam({ name: 'userId' })
+  @ApiParam({
+    name: 'userId',
+    example: 12,
+    description: 'User id number',
+    type: Number,
+  })
   @Get('/:userId')
-  findOne(@Param('userId') id: number) {
-    return this.usersService.findOne(id, 'withoutPassword');
+  findOne(@Param() userId: UserIdParamDto) {
+    return this.usersService.findOne(userId.userId, 'withoutPassword');
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete user (authorize required)' })
   @ApiResponse({ status: 200 })
-  @ApiParam({ name: 'userId' })
+  @ApiParam({
+    name: 'userId',
+    example: 12,
+    description: 'User id number',
+    type: Number,
+  })
   @Delete('/:userId')
-  remove(@Param('userId') id: number) {
-    return this.usersService.remove(id);
+  remove(@Param() userId: UserIdParamDto) {
+    return this.usersService.remove(userId.userId);
   }
 
   @UseGuards(RolesGuard)
-  @Roles(UserRolesEnum.admin)
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Set role for user (admin privileges are required)',
+    summary: 'Set role for user (authorize required)',
   })
   @ApiResponse({ status: 201 })
   @ApiBody({ type: SetRoleDto })
@@ -85,9 +95,14 @@ export class UsersController {
     summary: 'Remove ban from a user (admin privileges are required)',
   })
   @ApiResponse({ status: 201 })
-  @ApiParam({ name: 'userId' })
+  @ApiParam({
+    name: 'userId',
+    example: 12,
+    description: 'User id number',
+    type: Number,
+  })
   @Post('/unban/:userId')
-  removeBan(@Param('userId') id: number) {
-    return this.usersService.removeBan(id);
+  removeBan(@Param() userId: UserIdParamDto) {
+    return this.usersService.removeBan(userId.userId);
   }
 }

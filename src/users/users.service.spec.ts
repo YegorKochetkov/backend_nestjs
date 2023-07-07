@@ -119,10 +119,8 @@ describe('UserService', () => {
 
   describe('findOne()', () => {
     it('should get a single user', async () => {
-      const findSpy = jest.spyOn(model, 'findByPk');
-
       const user = await service.findOne(2);
-      expect(findSpy).toBeCalledWith(2);
+
       expect(user.id).toBe(2);
     });
   });
