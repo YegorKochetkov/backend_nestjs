@@ -9,10 +9,6 @@ export class RolesService {
   constructor(@InjectModel(Role) private roleRepository: typeof Role) {}
 
   async create(createRoleDto: CreateRoleDto) {
-    if (!Object.values(UserRolesEnum).includes(createRoleDto.role)) {
-      throw new HttpException('Wrong value of role', HttpStatus.BAD_REQUEST);
-    }
-
     return await this.roleRepository.create(createRoleDto).catch((error) => {
       throw new HttpException(`${error}`, HttpStatus.BAD_REQUEST);
     });

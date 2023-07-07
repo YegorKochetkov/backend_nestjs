@@ -3,6 +3,7 @@ import { Roles } from '../auth/decorators/roles-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { UserRolesEnum } from '../constants/constants';
 import { CreateRoleDto } from './dto/create-role.dto';
+import { RoleParamDto } from './dto/role-param.dto';
 import { Role } from './models/role.model';
 import { RolesService } from './roles.service';
 import {
@@ -32,10 +33,15 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Get role info' })
   @ApiResponse({ status: 200, type: Role })
-  @ApiParam({ name: 'role', enum: UserRolesEnum })
+  @ApiParam({
+    name: 'role',
+    enum: UserRolesEnum,
+    example: 'admin',
+    description: 'Unique value of the role',
+  })
   @Get('/:role')
-  findOne(@Param('role') role: UserRolesEnum) {
-    return this.roleService.findOne(role);
+  findOne(@Param() role: RoleParamDto) {
+    return this.roleService.findOne(role.role);
   }
 
   @ApiOperation({ summary: 'Get all roles info' })
