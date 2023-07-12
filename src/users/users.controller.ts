@@ -20,7 +20,6 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
-  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -39,12 +38,6 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get user' })
   @ApiResponse({ status: 200, type: User })
-  @ApiParam({
-    name: 'userId',
-    example: 12,
-    description: 'User id number',
-    type: Number,
-  })
   @Get('/:userId')
   findOne(@Param() userId: UserIdParamDto) {
     return this.usersService.findOne(userId.userId, 'withoutPassword');
@@ -54,12 +47,6 @@ export class UsersController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete user (authorize required)' })
   @ApiResponse({ status: 200 })
-  @ApiParam({
-    name: 'userId',
-    example: 12,
-    description: 'User id number',
-    type: Number,
-  })
   @Delete('/:userId')
   remove(@Param() userId: UserIdParamDto) {
     return this.usersService.remove(userId.userId);
@@ -95,12 +82,6 @@ export class UsersController {
     summary: 'Remove ban from a user (admin privileges are required)',
   })
   @ApiResponse({ status: 201 })
-  @ApiParam({
-    name: 'userId',
-    example: 12,
-    description: 'User id number',
-    type: Number,
-  })
   @Post('/unban/:userId')
   removeBan(@Param() userId: UserIdParamDto) {
     return this.usersService.removeBan(userId.userId);

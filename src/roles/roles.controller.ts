@@ -10,7 +10,6 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
-  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -33,12 +32,6 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Get role info' })
   @ApiResponse({ status: 200, type: Role })
-  @ApiParam({
-    name: 'role',
-    enum: UserRolesEnum,
-    example: 'admin',
-    description: 'Unique value of the role',
-  })
   @Get('/:role')
   findOne(@Param() role: RoleParamDto) {
     return this.roleService.findOne(role.role);
