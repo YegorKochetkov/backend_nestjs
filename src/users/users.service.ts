@@ -13,9 +13,13 @@ export class UsersService {
     @InjectModel(User) private userRepository: typeof User,
     private roleService: RolesService,
   ) {
-    this.userRepository.addScope('withoutPassword', {
-      attributes: { exclude: ['password'] },
-    });
+    this.userRepository.addScope(
+      'withoutPassword',
+      {
+        attributes: { exclude: ['password'] },
+      },
+      { override: true },
+    );
   }
 
   async create(createUserDto: CreateUserDto) {
