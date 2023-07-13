@@ -18,6 +18,8 @@ export class PostsService {
 
     const imgFileName = await this.filesService.createFile(image);
 
+    await this.postRepository.sync();
+
     return await this.postRepository
       .create({
         ...createPostDto,
@@ -35,12 +37,16 @@ export class PostsService {
         }
       : {};
 
+    await this.postRepository.sync();
+
     return await this.postRepository.findAll(findOptions).catch((error) => {
       throw new HttpException(`${error}`, HttpStatus.BAD_REQUEST);
     });
   }
 
   async findOne(postId: number) {
+    await this.postRepository.sync();
+
     const post = await this.postRepository.findByPk(postId).catch((error) => {
       throw new HttpException(`${error}`, HttpStatus.BAD_REQUEST);
     });
@@ -53,6 +59,8 @@ export class PostsService {
   }
 
   async remove(postId: number) {
+    await this.postRepository.sync();
+
     const post = await this.postRepository.findByPk(postId).catch((error) => {
       throw new HttpException(`${error}`, HttpStatus.BAD_REQUEST);
     });

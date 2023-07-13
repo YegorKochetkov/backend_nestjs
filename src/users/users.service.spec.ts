@@ -57,6 +57,7 @@ describe('UserService', () => {
             findByPk: jest.fn(() => mockUser),
             remove: jest.fn(),
             addScope: jest.fn(),
+            sync: jest.fn(),
             scope: jest.fn(() => model),
           },
         },
