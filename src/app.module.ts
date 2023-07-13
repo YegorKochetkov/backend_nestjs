@@ -23,15 +23,18 @@ let dialectOptions: object = {
   },
 };
 
+let envPath = '.env';
+
 if (process.env.NODE_ENV === 'development') {
   dialectOptions = {};
+  envPath += '.development';
 }
 
 @Module({
   controllers: [],
   providers: [],
   imports: [
-    ConfigModule.forRoot({ envFilePath: `.env.${process.env.NODE_ENV}` }),
+    ConfigModule.forRoot({ envFilePath: envPath }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,
