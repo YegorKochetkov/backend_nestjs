@@ -1,3 +1,4 @@
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostIdParamDto } from './dto/post-id-param.dto';
@@ -13,10 +14,12 @@ import {
   UseGuards,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -46,12 +49,16 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Add post (authorize required)' })
   @ApiResponse({ status: 201, type: PostModel })
-  @ApiBody({ type: CreatePostDto })
+  @UseInterceptors(FileInterceptor('image'))
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  create(
+    @Body() createPostDto: CreatePostDto,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    return this.postsService.create(createPostDto, image);
   }
 
   @UseGuards(JwtAuthGuard)
