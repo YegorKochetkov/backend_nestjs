@@ -19,6 +19,7 @@ dotenv.config();
 let dialectOptions: object = {
   ssl: {
     require: true,
+    rejectUnauthorized: false,
   },
 };
 
