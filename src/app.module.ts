@@ -4,7 +4,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import pg from 'pg';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { Post } from './posts/models/post.model';
@@ -23,28 +22,28 @@ let dialectOptions: object = {
   },
 };
 
-let envPath = '.env';
+let envFilePath = '.env';
 
 if (process.env.NODE_ENV === 'development') {
   dialectOptions = {};
-  envPath += '.development';
+  envFilePath += '.development';
 }
 
 @Module({
   controllers: [],
   providers: [],
   imports: [
-    ConfigModule.forRoot({ envFilePath: envPath }),
+    ConfigModule.forRoot({ envFilePath }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,
+      port: Number(process.env.POSTGRES_PORT),
       database: process.env.POSTGRES_DATABASE,
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       models: [User, Role, UserRoles, Post],
       autoLoadModels: true,
       dialectOptions,
-      dialectModule: pg,
     }),
     ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static') }),
     UsersModule,
