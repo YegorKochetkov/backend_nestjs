@@ -4,6 +4,8 @@ import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { ValidationPipe } from './pipes/validation.pipe';
 
+dotenv.config();
+
 const start = async () => {
   const PORT = process.env.PORT || 5000;
   const app = await NestFactory.create(AppModule);
