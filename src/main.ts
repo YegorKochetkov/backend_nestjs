@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { ValidationPipe } from './pipes/validation.pipe';
 
@@ -24,7 +25,11 @@ const start = async () => {
 
   SwaggerModule.setup('api/docs', app, swaggerDocument);
 
-  await app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
+  if (process.env.NODE_ENV === 'development') {
+    await app.listen(PORT, () =>
+      console.log(`Server started on port: ${PORT}`),
+    );
+  }
 };
 
 start();
