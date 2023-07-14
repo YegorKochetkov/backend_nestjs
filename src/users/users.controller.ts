@@ -52,7 +52,6 @@ export class UsersController {
     return this.usersService.remove(userId.userId);
   }
 
-  @UseGuards(RolesGuard)
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Set role for user (authorize required)',
