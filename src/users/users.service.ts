@@ -29,6 +29,11 @@ export class UsersService {
       email: createUserDto.email,
       password: createUserDto.password,
     });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
     const role = await this.roleService.findOne(UserRolesEnum.user);
 
     await user.$set('roles', [role.id]);
