@@ -1,6 +1,6 @@
 # REST API
 
-## [docs](/api/docs)
+## [docs](https://nestjs-rest-api-ic6q.onrender.com/api/docs)
 
 The endpoints don't have much sense,
 API was created to get acquainted with the possibilities of NextJS.

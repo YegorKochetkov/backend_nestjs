@@ -14,7 +14,9 @@ const start = async () => {
     .setTitle('Users backend example')
     .setDescription(
       `<h3>REST API documentation</h3><p>The endpoints don't have much sense,
-			 API was created to get acquainted with the possibilities of NextJS</p>`,
+			 API was created to get acquainted with the possibilities of NextJS.</p>
+			 <p>Be free to create users, give them admin rights, add posts and ban
+			 them!</p>`,
     )
     .setVersion('1.0.0')
     .addBearerAuth()
