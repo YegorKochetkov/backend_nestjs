@@ -10,6 +10,10 @@ export class FilesService {
     const filePath = path.resolve(__dirname, '..', 'static');
 
     try {
+      if (!fs.existsSync(filePath)) {
+        fs.mkdirSync(filePath, { recursive: true });
+      }
+
       await fs.promises.writeFile(path.join(filePath, fileName), file.buffer);
     } catch (error) {
       new HttpException(
