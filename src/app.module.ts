@@ -35,10 +35,10 @@ if (process.env.NODE_ENV === 'development') {
   controllers: [],
   providers: [],
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '..', 'api/docs'),
-      serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: path.join(__dirname, '..', 'api/docs'),
+    //   serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
+    // }),
     ConfigModule.forRoot({ envFilePath }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
