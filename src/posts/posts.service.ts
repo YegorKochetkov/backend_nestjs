@@ -14,6 +14,8 @@ export class PostsService {
   ) {}
 
   async create(createPostDto: CreatePostDto, image: Express.Multer.File) {
+    await this.postRepository.sync();
+
     await this.usersService.findOne(createPostDto.userId);
 
     const imgFileName = await this.filesService.createFile(image);
@@ -29,6 +31,8 @@ export class PostsService {
   }
 
   async findAll(userId: number) {
+    await this.postRepository.sync();
+
     const findOptions = userId
       ? {
           where: { userId },
@@ -41,6 +45,8 @@ export class PostsService {
   }
 
   async findOne(postId: number) {
+    await this.postRepository.sync();
+
     const post = await this.postRepository.findByPk(postId).catch((error) => {
       throw new HttpException(`${error}`, HttpStatus.BAD_REQUEST);
     });
@@ -53,6 +59,8 @@ export class PostsService {
   }
 
   async remove(postId: number) {
+    await this.postRepository.sync();
+
     const post = await this.postRepository.findByPk(postId).catch((error) => {
       throw new HttpException(`${error}`, HttpStatus.BAD_REQUEST);
     });

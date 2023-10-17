@@ -4,6 +4,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import pg from 'pg';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { Post } from './posts/models/post.model';
@@ -49,6 +50,7 @@ if (process.env.NODE_ENV === 'development') {
       models: [User, Role, UserRoles, Post],
       autoLoadModels: true,
       dialectOptions,
+      dialectModule: pg,
     }),
     ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static') }),
     UsersModule,

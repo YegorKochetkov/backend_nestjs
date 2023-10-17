@@ -9,16 +9,22 @@ export class RolesService {
   constructor(@InjectModel(Role) private roleRepository: typeof Role) {}
 
   async create(createRoleDto: CreateRoleDto) {
+    await this.roleRepository.sync();
+
     return await this.roleRepository.create(createRoleDto).catch((error) => {
       throw new HttpException(`${error}`, HttpStatus.BAD_REQUEST);
     });
   }
 
   async findOne(role: UserRolesEnum) {
+    await this.roleRepository.sync();
+
     return await this.roleRepository.findOne({ where: { role } });
   }
 
   async findAll() {
+    await this.roleRepository.sync();
+
     return await this.roleRepository.findAll();
   }
 }

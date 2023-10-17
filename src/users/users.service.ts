@@ -23,6 +23,8 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) {
+    await this.userRepository.sync();
+
     const user = await this.userRepository.create({
       email: createUserDto.email,
       password: createUserDto.password,
@@ -41,12 +43,16 @@ export class UsersService {
   }
 
   async findAll(scope = 'defaultScope') {
+    await this.userRepository.sync();
+
     return await this.userRepository.scope(scope).findAll({
       include: { all: true },
     });
   }
 
   async findOne(userId: number, scope = 'defaultScope') {
+    await this.userRepository.sync();
+
     const user = await this.userRepository
       .scope(scope)
       .findByPk(userId, { include: { all: true } });
@@ -59,6 +65,8 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string, scope = 'defaultScope') {
+    await this.userRepository.sync();
+
     return await this.userRepository.scope(scope).findOne({
       where: { email },
       include: { all: true },
@@ -66,6 +74,8 @@ export class UsersService {
   }
 
   async remove(userId: number, scope = 'defaultScope') {
+    await this.userRepository.sync();
+
     const user = await this.userRepository.scope(scope).findByPk(userId);
 
     if (!user) {
@@ -76,6 +86,8 @@ export class UsersService {
   }
 
   async setRole(setRoleDto: SetRoleDto, scope = 'defaultScope') {
+    await this.userRepository.sync();
+
     const user = await this.userRepository
       .scope(scope)
       .findByPk(setRoleDto.userId);
@@ -94,6 +106,8 @@ export class UsersService {
   }
 
   async setBan(setBanDto: SetBanDto, scope = 'defaultScope') {
+    await this.userRepository.sync();
+
     const user = await this.userRepository
       .scope(scope)
       .findByPk(setBanDto.userId);
@@ -108,6 +122,8 @@ export class UsersService {
   }
 
   async removeBan(userId: number, scope = 'defaultScope') {
+    await this.userRepository.sync();
+
     const user = await this.userRepository.scope(scope).findByPk(userId);
 
     if (!user) {
