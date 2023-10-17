@@ -18,7 +18,7 @@ dotenv.config();
 
 let dialectOptions: object = {
   ssl: {
-    require: true,
+    require: process.env.NODE_ENV === 'development' ? false : true,
     rejectUnauthorized: false,
   },
 };
