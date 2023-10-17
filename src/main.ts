@@ -8,7 +8,10 @@ import { ValidationPipe } from './pipes/validation.pipe';
 
 dotenv.config();
 
-const serverUrl = 'http://backend-nestjs-liart.vercel.app';
+const serverUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://backend-nestjs-liart.vercel.app'
+    : 'https://backend-nestjs-liart.vercel.app';
 
 const start = async () => {
   const PORT = process.env.PORT || 5000;
