@@ -1,6 +1,6 @@
 # REST API
 
-## [DEMO](https://nestjs-rest-api-ic6q.onrender.com/api/docs)
+## [DEMO](https://backend-nestjs-one.vercel.app/api/docs)
 
 The endpoints don't have much sense,
 API was created to get acquainted with the possibilities of NestJS.
