@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @ApiOperation({ summary: 'Login in' })
+  @ApiOperation({ summary: 'Login' })
   @ApiResponse({
     status: 200,
     schema: {
